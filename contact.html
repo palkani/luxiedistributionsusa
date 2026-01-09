@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Luxie Distribution USA</title>
+    <meta name="description" content="Get in touch with Luxie Distribution USA. We'd love to hear from you and help scale your business growth.">
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <!-- Header Section - Blue Background -->
+    <header class="header-section">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0;">
+                    <img src="logo.svg" alt="Luxie Distribution USA" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-name">
+                            <span class="logo-luxie">Luxie</span>
+                            <span class="logo-distribution">Distribution</span>
+                            <span class="logo-usa">USA</span>
+                        </span>
+                        <span class="logo-tagline">Premium Distribution Excellence</span>
+                    </div>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <div class="contact-hero">
+            <h1>Get in Touch</h1>
+            <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </header>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="contact-form-wrapper">
+                <form id="contact-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="email">Your Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="your.email@example.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input 
+                            type="text" 
+                            id="subject" 
+                            name="subject" 
+                            placeholder="What is this regarding?"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea 
+                            id="message" 
+                            name="message" 
+                            rows="8"
+                            placeholder="Tell us more about your inquiry..."
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-button">
+                        <span id="button-text">Send Message</span>
+                        <span id="button-loader" class="loader" style="display: none;"></span>
+                    </button>
+                    
+                    <div id="form-message" class="form-message"></div>
+                </form>
+            </div>
+            
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">📧</div>
+                    <h3>Email</h3>
+                    <p>contact@luxedistributionusa.com</p>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">💬</div>
+                    <h3>Response Time</h3>
+                    <p>We typically respond within 24 hours</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <h2>Why Partner With Us to Accelerate Your Brand?</h2>
+    </footer>
+
+    <script>
+        /*
+         * EMAILJS SETUP INSTRUCTIONS:
+         * 1. Sign up for a free account at https://www.emailjs.com/
+         * 2. Go to Email Services and connect your email service (Gmail, Outlook, etc.)
+         * 3. Go to Email Templates and create a new template with:
+         *    - Subject: {{subject}}
+         *    - Content: From: {{from_email}}\n\nMessage: {{message}}
+         * 4. Go to Account > API Keys and copy your Public Key
+         * 5. Copy your Service ID from Email Services
+         * 6. Copy your Template ID from Email Templates
+         * 7. Replace the placeholders below with your actual values
+         */
+
+        // Replace with your EmailJS Public Key
+        const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+        // Replace with your EmailJS Service ID
+        const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+        // Replace with your EmailJS Template ID
+        const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+        // Replace with your recipient email address
+        const RECIPIENT_EMAIL = "contact@luxedistributionusa.com";
+
+        // Initialize EmailJS
+        (function() {
+            if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+                emailjs.init(EMAILJS_PUBLIC_KEY);
+            }
+        })();
+
+        // Handle form submission
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Check if EmailJS is configured
+            if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
+                EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID" || 
+                EMAILJS_TEMPLATE_ID === "YOUR_TEMPLATE_ID") {
+                // Fallback: Use mailto link if EmailJS is not configured
+                const email = document.getElementById('email').value;
+                const subject = encodeURIComponent(document.getElementById('subject').value);
+                const message = encodeURIComponent(document.getElementById('message').value);
+                window.location.href = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=From: ${email}%0A%0A${message}`;
+                return;
+            }
+            
+            const button = document.querySelector('.submit-button');
+            const buttonText = document.getElementById('button-text');
+            const buttonLoader = document.getElementById('button-loader');
+            const formMessage = document.getElementById('form-message');
+            
+            // Show loading state
+            button.disabled = true;
+            buttonText.style.display = 'none';
+            buttonLoader.style.display = 'inline-block';
+            formMessage.textContent = '';
+            formMessage.className = 'form-message';
+            
+            // Prepare email parameters
+            const templateParams = {
+                from_email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                to_email: RECIPIENT_EMAIL
+            };
+            
+            // Send email using EmailJS
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+                .then(function(response) {
+                    // Success
+                    buttonText.textContent = 'Message Sent!';
+                    buttonLoader.style.display = 'none';
+                    buttonText.style.display = 'inline-block';
+                    formMessage.textContent = 'Thank you! Your message has been sent successfully. We\'ll get back to you soon.';
+                    formMessage.className = 'form-message success';
+                    
+                    // Reset form
+                    document.getElementById('contact-form').reset();
+                    
+                    // Reset button after 3 seconds
+                    setTimeout(function() {
+                        button.disabled = false;
+                        buttonText.textContent = 'Send Message';
+                    }, 3000);
+                }, function(error) {
+                    // Error
+                    buttonText.textContent = 'Send Message';
+                    buttonLoader.style.display = 'none';
+                    buttonText.style.display = 'inline-block';
+                    button.disabled = false;
+                    formMessage.textContent = 'Sorry, there was an error sending your message. Please try again or email us directly at contact@luxedistributionusa.com';
+                    formMessage.className = 'form-message error';
+                    console.error('EmailJS Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
