@@ -104,8 +104,18 @@
 
     <!-- Footer Section -->
     <footer class="footer-section">
-        <h2>Why Partner With Us to Accelerate Your Brand?</h2>
+        <div class="footer-content">
+            <h2 class="footer-heading">Growth Starts With the Right Partner</h2>
+            <div class="footer-copyright">
+                <p>&copy; <span id="current-year"></span> LuxieDistribution LLC.</p>
+            </div>
+        </div>
     </footer>
+
+    <script>
+        // Set current year for copyright
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 
     <script>
         /*
