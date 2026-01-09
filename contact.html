@@ -119,16 +119,34 @@
 
     <script>
         /*
-         * EMAILJS SETUP INSTRUCTIONS:
+         * EMAILJS SETUP INSTRUCTIONS (Required for automatic email sending):
+         * 
          * 1. Sign up for a free account at https://www.emailjs.com/
+         * 
          * 2. Go to Email Services and connect your email service (Gmail, Outlook, etc.)
+         *    - Copy your Service ID (looks like: service_xxxxxxxxx)
+         * 
          * 3. Go to Email Templates and create a new template with:
-         *    - Subject: {{subject}}
-         *    - Content: From: {{from_email}}\n\nMessage: {{message}}
+         *    Subject: {{subject}}
+         *    Content: 
+         *      From: {{from_email}}
+         *      Name: {{from_name}}
+         *      
+         *      Subject: {{subject}}
+         *      
+         *      Message:
+         *      {{message}}
+         *    - Copy your Template ID (looks like: template_xxxxxxxxx)
+         * 
          * 4. Go to Account > API Keys and copy your Public Key
-         * 5. Copy your Service ID from Email Services
-         * 6. Copy your Template ID from Email Templates
-         * 7. Replace the placeholders below with your actual values
+         *    (looks like: xxxxxxxxxxxxxxxxxxxxxxxx)
+         * 
+         * 5. Replace the placeholders below with your actual values:
+         *    - EMAILJS_PUBLIC_KEY: Your Public Key
+         *    - EMAILJS_SERVICE_ID: Your Service ID
+         *    - EMAILJS_TEMPLATE_ID: Your Template ID
+         * 
+         * IMPORTANT: After configuring, emails will be sent automatically without opening any mail client!
          */
 
         // Replace with your EmailJS Public Key
@@ -140,53 +158,65 @@
         // Replace with your recipient email address
         const RECIPIENT_EMAIL = "contact@luxedistributionusa.com";
 
-        // Initialize EmailJS
-        (function() {
-            if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+        // Initialize EmailJS (only if configured)
+        if (typeof emailjs !== 'undefined') {
+            if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY" && 
+                EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID" && 
+                EMAILJS_TEMPLATE_ID !== "YOUR_TEMPLATE_ID") {
                 emailjs.init(EMAILJS_PUBLIC_KEY);
             }
-        })();
+        }
 
         // Handle form submission
         document.getElementById('contact-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            
-            // Check if EmailJS is configured
-            if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
-                EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID" || 
-                EMAILJS_TEMPLATE_ID === "YOUR_TEMPLATE_ID") {
-                // Fallback: Use mailto link if EmailJS is not configured
-                const email = document.getElementById('email').value;
-                const subject = encodeURIComponent(document.getElementById('subject').value);
-                const message = encodeURIComponent(document.getElementById('message').value);
-                window.location.href = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=From: ${email}%0A%0A${message}`;
-                return;
-            }
             
             const button = document.querySelector('.submit-button');
             const buttonText = document.getElementById('button-text');
             const buttonLoader = document.getElementById('button-loader');
             const formMessage = document.getElementById('form-message');
             
+            // Get form values
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            // Validate form
+            if (!email || !subject || !message) {
+                formMessage.textContent = 'Please fill in all fields.';
+                formMessage.className = 'form-message error';
+                return;
+            }
+            
+            // Check if EmailJS is configured
+            if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
+                EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID" || 
+                EMAILJS_TEMPLATE_ID === "YOUR_TEMPLATE_ID") {
+                formMessage.textContent = 'Email service is not configured. Please contact the website administrator or email us directly at contact@luxedistributionusa.com';
+                formMessage.className = 'form-message error';
+                return;
+            }
+            
             // Show loading state
             button.disabled = true;
             buttonText.style.display = 'none';
             buttonLoader.style.display = 'inline-block';
-            formMessage.textContent = '';
+            formMessage.textContent = 'Sending your message...';
             formMessage.className = 'form-message';
             
             // Prepare email parameters
             const templateParams = {
-                from_email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value,
+                from_email: email,
+                from_name: email.split('@')[0], // Extract name from email
+                subject: subject,
+                message: message,
                 to_email: RECIPIENT_EMAIL
             };
             
-            // Send email using EmailJS
+            // Send email using EmailJS (no mail client will open)
             emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
                 .then(function(response) {
-                    // Success
+                    // Success - email sent automatically
                     buttonText.textContent = 'Message Sent!';
                     buttonLoader.style.display = 'none';
                     buttonText.style.display = 'inline-block';
@@ -200,14 +230,23 @@
                     setTimeout(function() {
                         button.disabled = false;
                         buttonText.textContent = 'Send Message';
+                        formMessage.textContent = '';
+                        formMessage.className = 'form-message';
                     }, 3000);
                 }, function(error) {
-                    // Error
+                    // Error handling
                     buttonText.textContent = 'Send Message';
                     buttonLoader.style.display = 'none';
                     buttonText.style.display = 'inline-block';
                     button.disabled = false;
-                    formMessage.textContent = 'Sorry, there was an error sending your message. Please try again or email us directly at contact@luxedistributionusa.com';
+                    
+                    let errorMessage = 'Sorry, there was an error sending your message. ';
+                    if (error.text) {
+                        errorMessage += 'Error: ' + error.text + '. ';
+                    }
+                    errorMessage += 'Please try again or email us directly at contact@luxedistributionusa.com';
+                    
+                    formMessage.textContent = errorMessage;
                     formMessage.className = 'form-message error';
                     console.error('EmailJS Error:', error);
                 });
