@@ -17,9 +17,9 @@ body {
 /* Header Section - Light Background */
 .header-section {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
-    min-height: 100vh;
+    min-height: auto;
     position: relative;
-    padding: 2rem 4rem;
+    padding: 2rem 4rem 4rem;
     display: flex;
     flex-direction: column;
     width: 100%;
