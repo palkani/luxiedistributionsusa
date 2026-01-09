@@ -721,13 +721,14 @@ body {
 
 .about-content-section {
     background: #F9FAFB;
-    padding: 0 4rem 6rem;
-    margin-top: -2rem;
+    padding: 3rem 4rem 6rem;
+    margin-top: 0;
 }
 
 .about-content-container {
     max-width: 900px;
     margin: 0 auto;
+    padding-top: 1rem;
 }
 
 .about-content-text {

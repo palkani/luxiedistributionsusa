@@ -6,7 +6,6 @@
     <title>Contact Us - Luxie Distribution USA</title>
     <meta name="description" content="Get in touch with Luxie Distribution USA. We'd love to hear from you and help scale your business growth.">
     <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <!-- Header Section - Blue Background -->
@@ -119,53 +118,23 @@
 
     <script>
         /*
-         * EMAILJS SETUP INSTRUCTIONS (Required for automatic email sending):
+         * FORMPREE SETUP INSTRUCTIONS (Easy & Free):
          * 
-         * 1. Sign up for a free account at https://www.emailjs.com/
+         * 1. Sign up for a free account at https://formspree.io/
          * 
-         * 2. Go to Email Services and connect your email service (Gmail, Outlook, etc.)
-         *    - Copy your Service ID (looks like: service_xxxxxxxxx)
+         * 2. Create a new form and get your form endpoint URL
+         *    (It will look like: https://formspree.io/f/YOUR_FORM_ID)
          * 
-         * 3. Go to Email Templates and create a new template with:
-         *    Subject: {{subject}}
-         *    Content: 
-         *      From: {{from_email}}
-         *      Name: {{from_name}}
-         *      
-         *      Subject: {{subject}}
-         *      
-         *      Message:
-         *      {{message}}
-         *    - Copy your Template ID (looks like: template_xxxxxxxxx)
+         * 3. Replace "YOUR_FORMPREE_ENDPOINT" below with your actual Formspree endpoint URL
          * 
-         * 4. Go to Account > API Keys and copy your Public Key
-         *    (looks like: xxxxxxxxxxxxxxxxxxxxxxxx)
-         * 
-         * 5. Replace the placeholders below with your actual values:
-         *    - EMAILJS_PUBLIC_KEY: Your Public Key
-         *    - EMAILJS_SERVICE_ID: Your Service ID
-         *    - EMAILJS_TEMPLATE_ID: Your Template ID
-         * 
-         * IMPORTANT: After configuring, emails will be sent automatically without opening any mail client!
+         * That's it! No complex configuration needed.
+         * Emails will be sent automatically to your email address.
          */
 
-        // Replace with your EmailJS Public Key
-        const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
-        // Replace with your EmailJS Service ID
-        const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
-        // Replace with your EmailJS Template ID
-        const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-        // Replace with your recipient email address
+        // Replace with your Formspree endpoint URL
+        // Get it from: https://formspree.io/forms
+        const FORMPREE_ENDPOINT = "YOUR_FORMPREE_ENDPOINT"; // e.g., "https://formspree.io/f/YOUR_FORM_ID"
         const RECIPIENT_EMAIL = "contact@luxedistributionusa.com";
-
-        // Initialize EmailJS (only if configured)
-        if (typeof emailjs !== 'undefined') {
-            if (EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY" && 
-                EMAILJS_SERVICE_ID !== "YOUR_SERVICE_ID" && 
-                EMAILJS_TEMPLATE_ID !== "YOUR_TEMPLATE_ID") {
-                emailjs.init(EMAILJS_PUBLIC_KEY);
-            }
-        }
 
         // Handle form submission
         document.getElementById('contact-form').addEventListener('submit', function(event) {
@@ -188,11 +157,9 @@
                 return;
             }
             
-            // Check if EmailJS is configured
-            if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
-                EMAILJS_SERVICE_ID === "YOUR_SERVICE_ID" || 
-                EMAILJS_TEMPLATE_ID === "YOUR_TEMPLATE_ID") {
-                formMessage.textContent = 'Email service is not configured. Please contact the website administrator or email us directly at contact@luxedistributionusa.com';
+            // Check if Formspree is configured
+            if (FORMPREE_ENDPOINT === "YOUR_FORMPREE_ENDPOINT") {
+                formMessage.textContent = 'Form service is not configured. Please contact the website administrator or email us directly at ' + RECIPIENT_EMAIL;
                 formMessage.className = 'form-message error';
                 return;
             }
@@ -204,18 +171,24 @@
             formMessage.textContent = 'Sending your message...';
             formMessage.className = 'form-message';
             
-            // Prepare email parameters
-            const templateParams = {
-                from_email: email,
-                from_name: email.split('@')[0], // Extract name from email
-                subject: subject,
-                message: message,
-                to_email: RECIPIENT_EMAIL
-            };
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('subject', subject);
+            formData.append('message', message);
+            formData.append('_replyto', email);
+            formData.append('_subject', 'Contact Form: ' + subject);
             
-            // Send email using EmailJS (no mail client will open)
-            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-                .then(function(response) {
+            // Send email using Formspree (no mail client will open)
+            fetch(FORMPREE_ENDPOINT, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (response.ok) {
                     // Success - email sent automatically
                     buttonText.textContent = 'Message Sent!';
                     buttonLoader.style.display = 'none';
@@ -233,23 +206,21 @@
                         formMessage.textContent = '';
                         formMessage.className = 'form-message';
                     }, 3000);
-                }, function(error) {
-                    // Error handling
-                    buttonText.textContent = 'Send Message';
-                    buttonLoader.style.display = 'none';
-                    buttonText.style.display = 'inline-block';
-                    button.disabled = false;
-                    
-                    let errorMessage = 'Sorry, there was an error sending your message. ';
-                    if (error.text) {
-                        errorMessage += 'Error: ' + error.text + '. ';
-                    }
-                    errorMessage += 'Please try again or email us directly at contact@luxedistributionusa.com';
-                    
-                    formMessage.textContent = errorMessage;
-                    formMessage.className = 'form-message error';
-                    console.error('EmailJS Error:', error);
-                });
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(function(error) {
+                // Error handling
+                buttonText.textContent = 'Send Message';
+                buttonLoader.style.display = 'none';
+                buttonText.style.display = 'inline-block';
+                button.disabled = false;
+                
+                formMessage.textContent = 'Sorry, there was an error sending your message. Please try again or email us directly at ' + RECIPIENT_EMAIL;
+                formMessage.className = 'form-message error';
+                console.error('Formspree Error:', error);
+            });
         });
     </script>
 </body>
