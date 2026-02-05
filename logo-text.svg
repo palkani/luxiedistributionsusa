@@ -1,49 +1,46 @@
-<svg viewBox="0 0 6000 600" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 150" width="1000" height="150">
   <defs>
-    <linearGradient id="navyBlueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
-    </linearGradient>
-    
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.25"/>
-    </filter>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Libre+Baskerville:ital@1&display=swap');
+      
+      .luxe-text { 
+        font-family: 'Playfair Display', 'Georgia', serif; 
+        font-weight: 700;
+        font-size: 72px;
+        fill: #1e3a5f;
+        letter-spacing: 3px;
+      }
+      .distribution-text { 
+        font-family: 'Libre Baskerville', 'Georgia', serif; 
+        font-weight: 400;
+        font-style: italic;
+        font-size: 72px;
+        fill: #2c2c2c;
+        letter-spacing: 2px;
+      }
+      .usa-text { 
+        font-family: 'Playfair Display', 'Georgia', serif; 
+        font-weight: 700;
+        font-size: 72px;
+        fill: #1e3a5f;
+        letter-spacing: 3px;
+      }
+      .tagline { 
+        font-family: 'Georgia', serif; 
+        font-weight: 400;
+        font-style: italic;
+        font-size: 20px;
+        fill: #5a5a5a;
+        letter-spacing: 3px;
+      }
+    </style>
   </defs>
   
-  <!-- Company Name -->
-  <g transform="translate(50, 280)">
-    <!-- Luxie -->
-    <text x="0" y="0" 
-          font-family="Georgia, 'Times New Roman', serif" 
-          font-size="350" 
-          font-weight="700" 
-          fill="#1e3a8a" 
-          letter-spacing="3">Luxie</text>
-    
-    <!-- Distribution - space character added for spacing -->
-    <text x="1050" y="0" 
-          font-family="Georgia, 'Palatino Linotype', 'Book Antiqua', serif" 
-          font-size="350" 
-          font-weight="600" 
-          font-style="italic" 
-          fill="#2a2a2a" 
-          letter-spacing="2">Distribution</text>
-    
-    <!-- USA -->
-    <text x="3600" y="0" 
-          font-family="Georgia, 'Times New Roman', serif" 
-          font-size="330" 
-          font-weight="700" 
-          fill="#1e3a8a" 
-          letter-spacing="3">USA</text>
-  </g>
+  <!-- Main logo text with wider spacing -->
+  <text x="50" y="85" class="luxe-text">LUXE</text>
+  <text x="265" y="85" class="distribution-text">Distribution</text>
+  <text x="750" y="85" class="usa-text">USA</text>
   
   <!-- Tagline -->
-  <text x="50" y="510" 
-        font-family="Georgia, serif" 
-        font-size="105" 
-        font-style="italic" 
-        fill="#666666" 
-        letter-spacing="2">Premium Distribution Excellence</text>
+  <text x="50" y="120" class="tagline">Premium Distribution Excellence</text>
 </svg>
